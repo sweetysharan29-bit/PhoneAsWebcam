@@ -10,13 +10,33 @@ Status: early setup. No app code yet.
 
 ## Layout
 
-| Folder | Contents |
-|---|---|
-| `ios/` | Xcode project (Swift / SwiftUI) |
-| `windows/App/` | C# WinUI 3 desktop app |
-| `windows/VirtualCamera/` | C++ Media Foundation media source DLL |
-| `protocol/` | Shared wire-protocol spec (framing, handshake, formats) |
-| `docs/` | Project documentation |
+```
+PhoneAsWebcam/
+├── iphone/                    # iPhone app (Swift / SwiftUI), built on a Mac with Xcode
+│   ├── PhoneAsWebcam/
+│   │   ├── App/               # entry point, lifecycle
+│   │   ├── Camera/            # capture, lens + format discovery, focus/exposure/WB, zoom
+│   │   ├── Encoder/           # VideoToolbox HEVC / H.264
+│   │   ├── Streaming/         # Network.framework server, USB + Wi-Fi
+│   │   ├── Protocol/          # Swift side of the wire protocol
+│   │   ├── Device/            # thermal warnings, screen dimming
+│   │   ├── UI/                # SwiftUI screens
+│   │   └── Resources/         # Info.plist, assets, permission strings
+│   └── PhoneAsWebcamTests/
+├── windows/                   # Windows 11 side, built with Visual Studio (one .sln)
+│   ├── App/                   # C# WinUI 3 desktop app
+│   ├── Connection/            # C#: USB (usbmuxd) + Wi-Fi, C# side of the wire protocol
+│   ├── Decoder/               # C#: Media Foundation / D3D11 hardware decode
+│   ├── FrameBridge/           # C++ header + C#: shared-memory frames, app -> virtual camera
+│   ├── VirtualCamera/         # C++ Media Foundation media source DLL
+│   ├── Installer/             # MSIX packaging, virtual camera registration
+│   └── Tests/
+└── docs/
+    ├── PROJECT_CONTEXT.md     # goals, decisions, scope
+    └── protocol/              # wire-protocol spec shared by iphone/ and windows/
+```
+
+Each of `iphone/` and `windows/` has its own README describing its modules. The wire-protocol spec in `docs/protocol/` is the contract both sides implement.
 
 ## Building
 

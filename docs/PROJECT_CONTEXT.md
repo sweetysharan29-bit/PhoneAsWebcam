@@ -114,12 +114,28 @@ The project began as a broader idea for full iOS ↔ Windows integration. It was
 ## 9. Repo layout
 ```
 PhoneAsWebcam/
-├── ios/                  # Xcode project (Swift / SwiftUI)
-├── windows/
-│   ├── App/              # C# WinUI 3 desktop app
-│   └── VirtualCamera/    # C++ Media Foundation media source DLL
-├── protocol/             # Shared wire-protocol spec (framing, handshake, formats)
+├── iphone/                    # iPhone app (Swift / SwiftUI), built on a Mac with Xcode
+│   ├── PhoneAsWebcam/
+│   │   ├── App/               # entry point, lifecycle
+│   │   ├── Camera/            # capture, lens + format discovery, focus/exposure/WB, zoom
+│   │   ├── Encoder/           # VideoToolbox HEVC / H.264
+│   │   ├── Streaming/         # Network.framework server, USB + Wi-Fi
+│   │   ├── Protocol/          # Swift side of the wire protocol
+│   │   ├── Device/            # thermal warnings, screen dimming
+│   │   ├── UI/                # SwiftUI screens
+│   │   └── Resources/         # Info.plist, assets, permission strings
+│   └── PhoneAsWebcamTests/
+├── windows/                   # Windows 11 side, built with Visual Studio (one .sln)
+│   ├── App/                   # C# WinUI 3 desktop app
+│   ├── Connection/            # C#: USB (usbmuxd) + Wi-Fi, C# side of the wire protocol
+│   ├── Decoder/               # C#: Media Foundation / D3D11 hardware decode
+│   ├── FrameBridge/           # C++ header + C#: shared-memory frames, app -> virtual camera
+│   ├── VirtualCamera/         # C++ Media Foundation media source DLL
+│   ├── Installer/             # MSIX packaging, virtual camera registration
+│   └── Tests/
 └── docs/
+    ├── PROJECT_CONTEXT.md     # goals, decisions, scope
+    └── protocol/              # wire-protocol spec shared by iphone/ and windows/
 ```
 
 ## 10. Open items
